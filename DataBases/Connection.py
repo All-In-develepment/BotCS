@@ -22,7 +22,7 @@ def ListMultipleMatchs():
             print(f"Erro ao listar documentos: {e}")
             return [], False
     else:
-        print("Erro ao Conecctar com banco de dados")
+        print("Erro ao Conectar com banco de dados")
         return [], False
     
 def ListSingleMatch(match_id):
@@ -35,7 +35,7 @@ def ListSingleMatch(match_id):
             print(f"Erro ao listar documentos: {e}")
             return [], False
     else:
-        print("Erro ao Conecctar com banco de dados")
+        print("Erro ao Conectar com banco de dados")
         return [], False
 
 def FindMatchByMatchId(match_id):
@@ -48,7 +48,7 @@ def FindMatchByMatchId(match_id):
             print(f"Erro ao listar documentos: {e}")
             return [], False
     else:
-        print("Erro ao Conecctar com banco de dados")
+        print("Erro ao Conectar com banco de dados")
         return [], False
 
 def InsertOne(data):
@@ -61,7 +61,7 @@ def InsertOne(data):
             print(f"Erro ao inserir documento: {e}")
             return None, False
     else:
-        print("Erro ao Conecctar com banco de dados")
+        print("Erro ao Conectar com banco de dados")
         return None, False
 
 def DeleteOne(document_id):
@@ -74,7 +74,7 @@ def DeleteOne(document_id):
             print(f"Erro ao deletar documento: {e}")
             return None, False
     else:
-        print("Erro ao Conecctar com banco de dados")
+        print("Erro ao Conectar com banco de dados")
         return None, False
     
 def EditOne(document_id, new_values):
@@ -87,5 +87,24 @@ def EditOne(document_id, new_values):
             print(f"Erro ao editar documento: {e}")
             return None, False
     else:
-        print("Erro ao Conecctar com banco de dados")
+        print("Erro ao Conectar com banco de dados")
         return None, False
+
+def InsertOrUpdateGame(game_data):
+    collection, success = CreateConnection()
+    if success:
+        try:
+            match_id = game_data['match_id']
+            existing_game = collection.find_one({"match_id": match_id})
+            if existing_game:
+                print(f"Jogo com o match_id {match_id} já existe no banco de dados. Ignorando inserção.")
+            else:
+                result = collection.insert_one(game_data)
+                print(f"Jogo inserido com sucesso com o ID: {result.inserted_id}")
+            return True
+        except Exception as e:
+            print(f"Erro ao inserir ou atualizar jogo: {e}")
+            return False
+    else:
+        print("Erro ao Conectar com banco de dados")
+        return False
