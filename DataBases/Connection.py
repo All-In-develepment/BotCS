@@ -3,8 +3,9 @@ from bson.objectid import ObjectId
 
 def CreateConnection():
     try:
-        client = MongoClient("194.35.120.140")
-        db = client["mydb"]
+        uri = "mongodb://botcs:allIn2022@194.35.120.140?retryWrites=true&writeConcern=majority"
+        client = MongoClient(uri)
+        db = client["cs"]
         collection = db["cs_bot"]
         return collection, True
 
