@@ -10,7 +10,9 @@ def SendMessage(message):
     bot = telebot.TeleBot(bot_token)
 
     # Envie a mensagem para o canal
-    bot.send_message(channel_id, message)
+    msg_id = bot.send_message(channel_id, message)
 
     # Imprima uma mensagem de sucesso
     print('Mensagem enviada com sucesso')
+    
+    return msg_id.message_id

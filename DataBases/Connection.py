@@ -1,8 +1,5 @@
 import json
-from pymongo import MongoClient
-from bson.objectid import ObjectId
 import requests
-from flask import Flask, jsonify
 
 
 def ListMultipleMatchs():
@@ -11,7 +8,7 @@ def ListMultipleMatchs():
         return result
         
     except Exception as e:
-        return jsonify({'error': f'Erro ao obter os dados, {e}'}), 500
+        return json({'error': f'Erro ao obter os dados, {e}'}), 500
     
 def ListSingleMatch(match_id):
     try:
@@ -19,7 +16,7 @@ def ListSingleMatch(match_id):
         return result
         
     except Exception as e:
-        return jsonify({'error': f'Erro ao obter os dados, {e}'}), 500
+        return json({'error': f'Erro ao obter os dados, {e}'}), 500
 
 
 def InsertOne(data):
@@ -29,19 +26,25 @@ def InsertOne(data):
         return result
 
     except Exception as e:
-        return jsonify({'error': f'Erro ao obter os dados, {e}'}), 500
+        return json({'error': f'Erro ao obter os dados, {e}'}), 500
     
     
 def FindMatchByMatchId(match_id):
     try:
         result = requests.get(f"http://191.252.5.229:8080/api/Tips/match/{match_id}")
+        print(result.status_code)
         if (result.status_code == 200):
+            print("Cheguei até aqui")
             return result.json()
+        elif (result.status_code == 404):
+            result = {"tipStatus": False}
+            return result
         else:
-            return jsonify({'error': f'Erro ao obter os dados, {e}'}), 500
+            result = {"tipStatus": True}
+            return result
         
     except Exception as e:
-        return jsonify({'error': f'Erro ao obter os dados, {e}'}), 500
+        return json({'error': f'Erro ao obter os dados, {e}'}), 500
 
 # def DeleteOne(document_id):
 #     collection, success = CreateConnection()

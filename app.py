@@ -90,12 +90,13 @@ while True:
                                     map_1=f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
                                     map_2=f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
                                     map_3=f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
+                                    entrada_1=f'UNDER {first_map_tip}',
                                     entrada_2=f'UNDER {second_map_tip}',
                                     entrada_3=f'UNDER {third_map_tip}'
                                 )
 
                             # Envia a mensagem
-                            SendMessage(entrada)
+                            msg_id = SendMessage(entrada)
                             
                             InsertOne({
                                 "TeamA": f"{match['team1']['name']}",
@@ -107,11 +108,10 @@ while True:
                                     f"{informacoes['fourth_map_element'] if 'fourth_map_element' in informacoes else 'na'}",
                                     f"{informacoes['fifth_map_element'] if 'fifth_map_element' in informacoes else 'na'}",
                                 ],
-                                "TipMapOdd": ["Map 12", "Map 22"],
+                                "TipMapOdd": [f"{first_map_tip}", f"{second_map_tip}", f"{third_map_tip}"],
                                 "TipMatchId": f"{match['id']}",
-                                "FavoriteTeam": "aoiksikopas",
-                                "TipMessageId": "asopkasok0",
-                                "TipsMapResult": ["Resultado", "Resultado"],
+                                "FavoriteTeam": f"{favorite_team}",
+                                "TipMessageId": f"{msg_id}",
                                 "TipDate": "2021-06-01T00:00:00",
                                 "tipStatus": True
                             })
@@ -167,7 +167,7 @@ while True:
                                     entrada_2=f'UNDER {second_map_tip}',
                                     entrada_3=f'UNDER {third_map_tip}'
                                 )
-                            SendMessage(entrada)
+                            msg_id = SendMessage(entrada)
                             
                             InsertOne({
                                 "TeamA": f"{match['team1']['name']}",
@@ -179,33 +179,13 @@ while True:
                                     f"{informacoes['fourth_map_element'] if 'fourth_map_element' in informacoes else 'na'}",
                                     f"{informacoes['fifth_map_element'] if 'fifth_map_element' in informacoes else 'na'}",
                                 ],
-                                "TipMapOdd": ["Map 12", "Map 22"],
+                                "TipMapOdd": [f"{first_map_tip}", f"{second_map_tip}", f"{third_map_tip}"],
                                 "TipMatchId": f"{match['id']}",
-                                "FavoriteTeam": "aoiksikopas",
-                                "TipMessageId": "asopkasok0",
-                                "TipsMapResult": ["Resultado", "Resultado"],
+                                "FavoriteTeam": f"{favorite_team}",
+                                "TipMessageId": f"{msg_id}",
                                 "TipDate": "2021-06-01T00:00:00",
                                 "tipStatus": True
                             })
-                            
-                            
-                            # InsertOrUpdateGame({
-                            #     'match_id': match['id'],
-                            #     'status': True,
-                            #     'date': date_timestemp.strftime('%d/%m/%Y %H:%M'),
-                            #     'team_a': match['team1']['name'],
-                            #     'team_b': match['team2']['name'],
-                            #     'map_1': informacoes['firt_map_element'],
-                            #     'map_2': informacoes['second_map_element'],
-                            #     'map_3': informacoes['third_map_element'],
-                            #     'map_4': 'N/A',
-                            #     'map_5': 'N/A',
-                            #     'entrada_1': f'UNDER {first_map_tip}',
-                            #     'entrada_2': f'UNDER {second_map_tip}',
-                            #     'entrada_3': f'UNDER {third_map_tip}',
-                            #     'entrada_4': 'N/A',
-                            #     'entrada_5': 'N/A'
-                            # })
                         else:
                             print("Não atende aos requisitos")
 
