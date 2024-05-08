@@ -5,12 +5,9 @@ from Games import getAllGames, filterNextGames, getMapsBO1, getMapsBO3, getMapsB
 from Messages.messagens import SendMessage
 from Tips.TipsManager import CreateTips, VerifyOpenTip
 from verifyerTeam import AvgWinPeerLoos, FavoriteTeam
-from DataBases.Connection import ListMultipleMatchs, ListSingleMatch, InsertOne, DeleteOne, EditOne, CreateConnection, FindMatchByMatchId, InsertOrUpdateGame
+from DataBases.Connection import InsertOne
 
 
-
-# Definindo um conjunto para armazenar IDs de partidas enviadas
-partidas_enviadas = set()
 
 url_matchs = "http://191.252.5.225:5000/get-matches-statistics"
 
@@ -43,7 +40,7 @@ while True:
                     tip_is_open = VerifyOpenTip(match['id'])
                     
                     # Se a tip não estiver aberta e se o ID da partida ainda não foi enviado
-                    if not tip_is_open and match['id'] not in partidas_enviadas:
+                    if (tip_is_open == False):
                         # Busca as informações de acordo com o tipo de jogo
                         if match["format"]["type"] == "bo3":
                             informacoes = getMapsBO3(new_structure['match_id'], new_structure['new_uri'])
@@ -53,7 +50,7 @@ while True:
                             informacoes = getMapsBO1(new_structure['match_id'], new_structure['new_uri'])
 
                         # Define o time favorito
-                        favorite_team = FavoriteTeam(match['team1']['name'], match['team2']['name'], match['team1']['rank'], match['team2']['rank'], 25)
+                        favorite_team = FavoriteTeam(match['team1']['name'], match['team2']['name'], match['team1']['rank'], match['team2']['rank'], 5)
 
                         # Formatação de data de forma legível
                         date_timestemp = datetime.fromtimestamp(match['date']/1000)
@@ -90,38 +87,53 @@ while True:
                                     match_date=date_timestemp.strftime('%d/%m/%Y'),
                                     match_time=date_timestemp.strftime('%H:%M'),
                                     favorite_team=favorite_team,
-                                    map_1=informacoes['firt_map_element'],
-                                    map_2=informacoes['second_map_element'],
-                                    map_3=informacoes['third_map_element'],
-                                    entrada_1=f'UNDER {first_map_tip}',
+                                    map_1=f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
+                                    map_2=f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
+                                    map_3=f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
                                     entrada_2=f'UNDER {second_map_tip}',
                                     entrada_3=f'UNDER {third_map_tip}'
                                 )
 
                             # Envia a mensagem
                             SendMessage(entrada)
-
-                            # Insere a dica no banco de dados
-                            InsertOrUpdateGame({
-                                'match_id': match['id'],
-                                'status': True,
-                                'date': date_timestemp.strftime('%d/%m/%Y %H:%M'),
-                                'team_a': match['team1']['name'],
-                                'team_b': match['team2']['name'],
-                                'map_1': informacoes['firt_map_element'],
-                                'map_2': informacoes['second_map_element'],
-                                'map_3': informacoes['third_map_element'],
-                                'map_4': 'N/A',
-                                'map_5': 'N/A',
-                                'entrada_1': f'UNDER {first_map_tip}',
-                                'entrada_2': f'UNDER {second_map_tip}',
-                                'entrada_3': f'UNDER {third_map_tip}',
-                                'entrada_4': 'N/A',
-                                'entrada_5': 'N/A'
+                            
+                            InsertOne({
+                                "TeamA": f"{match['team1']['name']}",
+                                "TeamB" : f"{match['team2']['name']}",
+                                "TipMaps": [
+                                    f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['fourth_map_element'] if 'fourth_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['fifth_map_element'] if 'fifth_map_element' in informacoes else 'na'}",
+                                ],
+                                "TipMapOdd": ["Map 12", "Map 22"],
+                                "TipMatchId": f"{match['id']}",
+                                "FavoriteTeam": "aoiksikopas",
+                                "TipMessageId": "asopkasok0",
+                                "TipsMapResult": ["Resultado", "Resultado"],
+                                "TipDate": "2021-06-01T00:00:00",
+                                "tipStatus": True
                             })
 
-                            # Adiciona o ID da partida ao conjunto de partidas enviadas
-                            partidas_enviadas.add(match['id'])
+                            # Insere a dica no banco de dados
+                            # InsertOrUpdateGame({
+                            #     'match_id': match['id'],
+                            #     'status': True,
+                            #     'date': date_timestemp.strftime('%d/%m/%Y %H:%M'),
+                            #     'team_a': match['team1']['name'],
+                            #     'team_b': match['team2']['name'],
+                            #     'map_1': informacoes['firt_map_element'],
+                            #     'map_2': informacoes['second_map_element'],
+                            #     'map_3': informacoes['third_map_element'],
+                            #     'map_4': 'N/A',
+                            #     'map_5': 'N/A',
+                            #     'entrada_1': f'UNDER {first_map_tip}',
+                            #     'entrada_2': f'UNDER {second_map_tip}',
+                            #     'entrada_3': f'UNDER {third_map_tip}',
+                            #     'entrada_4': 'N/A',
+                            #     'entrada_5': 'N/A'
+                            # })
 
                         elif favorite_team == 'T2':
                             favorite_team = match['team2']['name']
@@ -148,34 +160,52 @@ while True:
                                     match_date=date_timestemp.strftime('%d/%m/%Y'),
                                     match_time=date_timestemp.strftime('%H:%M'),
                                     favorite_team=favorite_team,
-                                    map_1=informacoes['firt_map_element'],
-                                    map_2=informacoes['second_map_element'],
-                                    map_3=informacoes['third_map_element'],
+                                    map_1=f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
+                                    map_2=f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
+                                    map_3=f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
                                     entrada_1=f'UNDER {first_map_tip}',
                                     entrada_2=f'UNDER {second_map_tip}',
                                     entrada_3=f'UNDER {third_map_tip}'
                                 )
                             SendMessage(entrada)
-                            InsertOrUpdateGame({
-                                'match_id': match['id'],
-                                'status': True,
-                                'date': date_timestemp.strftime('%d/%m/%Y %H:%M'),
-                                'team_a': match['team1']['name'],
-                                'team_b': match['team2']['name'],
-                                'map_1': informacoes['firt_map_element'],
-                                'map_2': informacoes['second_map_element'],
-                                'map_3': informacoes['third_map_element'],
-                                'map_4': 'N/A',
-                                'map_5': 'N/A',
-                                'entrada_1': f'UNDER {first_map_tip}',
-                                'entrada_2': f'UNDER {second_map_tip}',
-                                'entrada_3': f'UNDER {third_map_tip}',
-                                'entrada_4': 'N/A',
-                                'entrada_5': 'N/A'
+                            
+                            InsertOne({
+                                "TeamA": f"{match['team1']['name']}",
+                                "TeamB" : f"{match['team2']['name']}",
+                                "TipMaps": [
+                                    f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['fourth_map_element'] if 'fourth_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['fifth_map_element'] if 'fifth_map_element' in informacoes else 'na'}",
+                                ],
+                                "TipMapOdd": ["Map 12", "Map 22"],
+                                "TipMatchId": f"{match['id']}",
+                                "FavoriteTeam": "aoiksikopas",
+                                "TipMessageId": "asopkasok0",
+                                "TipsMapResult": ["Resultado", "Resultado"],
+                                "TipDate": "2021-06-01T00:00:00",
+                                "tipStatus": True
                             })
-
-                            # Adiciona o ID da partida ao conjunto de partidas enviadas
-                            partidas_enviadas.add(match['id'])
+                            
+                            
+                            # InsertOrUpdateGame({
+                            #     'match_id': match['id'],
+                            #     'status': True,
+                            #     'date': date_timestemp.strftime('%d/%m/%Y %H:%M'),
+                            #     'team_a': match['team1']['name'],
+                            #     'team_b': match['team2']['name'],
+                            #     'map_1': informacoes['firt_map_element'],
+                            #     'map_2': informacoes['second_map_element'],
+                            #     'map_3': informacoes['third_map_element'],
+                            #     'map_4': 'N/A',
+                            #     'map_5': 'N/A',
+                            #     'entrada_1': f'UNDER {first_map_tip}',
+                            #     'entrada_2': f'UNDER {second_map_tip}',
+                            #     'entrada_3': f'UNDER {third_map_tip}',
+                            #     'entrada_4': 'N/A',
+                            #     'entrada_5': 'N/A'
+                            # })
                         else:
                             print("Não atende aos requisitos")
 
