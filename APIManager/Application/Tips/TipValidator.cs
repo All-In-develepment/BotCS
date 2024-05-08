@@ -13,6 +13,7 @@ namespace Application.Tips
             RuleFor(x => x.TeamB).NotEmpty();
             RuleFor(x => x.FavoriteTeam).NotEmpty();
             RuleFor(x => x.TipMapOdd).NotEmpty();
+            RuleFor(x => x.TipStatus).NotEmpty();
         }
     }
 }

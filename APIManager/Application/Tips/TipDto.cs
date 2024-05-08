@@ -11,5 +11,6 @@ namespace Application.Tips
         public List<string> TipMapOdd { get; set; }
         public string TipMessageId { get; set; }
         public List<string> TipsMapResult { get; set; }
+        public bool TipStatus { get; set; }
     }
 }

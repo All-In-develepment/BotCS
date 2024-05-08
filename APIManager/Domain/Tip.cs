@@ -15,5 +15,6 @@ namespace Domain
         public string TipMessageId { get; set; }
         public List<string> TipsMapResult { get; set; }
         public DateTime TipDate { get; set; }
+        public bool TipStatus { get; set; }
     }
 }
