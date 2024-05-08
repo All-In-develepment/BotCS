@@ -26,5 +26,11 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new CreateTip.Command { Tip = tip }));
         }
+
+        [HttpGet("match/{matchId}")]
+        public async Task<IActionResult> GetTipByMatchId(string matchId)
+        {
+            return HandleResult(await Mediator.Send(new FindByMatchId.Query { MatchId = matchId }));
+        }
     }
 }
