@@ -54,6 +54,7 @@ while True:
 
                         # Formatação de data de forma legível
                         date_timestemp = datetime.fromtimestamp(match['date']/1000)
+                        
 
                         # Verifica se o time favorito é o time 1 ou 2
                         if favorite_team == 'T1':
@@ -78,6 +79,7 @@ while True:
                             first_map_tip = AvgWinPeerLoos(first_map_avg)
                             second_map_tip = AvgWinPeerLoos(second_map_avg)
                             third_map_tip = AvgWinPeerLoos(third_map_avg)
+                            
 
                             # Abre o arquivo de mensagem e formata a mensagem
                             with open('Messages/entrada_message.txt', 'r', encoding='utf-8') as file:
@@ -112,7 +114,7 @@ while True:
                                 "TipMatchId": f"{match['id']}",
                                 "FavoriteTeam": f"{favorite_team}",
                                 "TipMessageId": f"{msg_id}",
-                                "TipDate": "2021-06-01T00:00:00",
+                                "TipDate": f"{date_timestemp.strftime('%Y-%m-%dT%H:%M:%S')}",
                                 "tipStatus": True
                             })
 
@@ -183,7 +185,7 @@ while True:
                                 "TipMatchId": f"{match['id']}",
                                 "FavoriteTeam": f"{favorite_team}",
                                 "TipMessageId": f"{msg_id}",
-                                "TipDate": "2021-06-01T00:00:00",
+                                "TipDate": f"{date_timestemp.strftime('%Y-%m-%dT%H:%M:%S')}",
                                 "tipStatus": True
                             })
                         else:
