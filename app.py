@@ -50,7 +50,7 @@ while True:
                             informacoes = getMapsBO1(new_structure['match_id'], new_structure['new_uri'])
 
                         # Define o time favorito
-                        favorite_team = FavoriteTeam(match['team1']['name'], match['team2']['name'], match['team1']['rank'], match['team2']['rank'], 5)
+                        favorite_team = FavoriteTeam(match['team1']['name'], match['team2']['name'], match['team1']['rank'], match['team2']['rank'], 25)
 
                         # Formatação de data de forma legível
                         date_timestemp = datetime.fromtimestamp(match['date']/1000)
