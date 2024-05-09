@@ -1,11 +1,11 @@
 import time
 import os
 from datetime import datetime
-from Games import getAllGames, filterNextGames, getMapsBO1, getMapsBO3, getMapsBO5, getMatchInfo, strutuctInfo
+from Games import getAllGames, filterNextGames, getMapsBO1, getMapsBO3, getMapsBO5, getMatchByMatchId, getMatchInfo, strutuctInfo
 from Messages.messagens import SendMessage
 from Tips.TipsManager import VerifyOpenTip
 from verifyerTeam import AvgWinPeerLoos, FavoriteTeam
-from DataBases.Connection import InsertOrUpdateGame
+from DataBases.Connection import GetOpenTips, InsertOrUpdateGame
 
 
 
@@ -183,5 +183,44 @@ while True:
                     print("Partida sem mapa\n--------------------------")
     except Exception as e:
         print(e)
+        
+    match_in_db = GetOpenTips()
+    
+    point = 0
+    for tip in match_in_db:
+        match = getMatchByMatchId(tip["tipMatchId"])
+        print(tip["tipMatchId"])
+        for entrada in tip["tipMapOdd"]:
+            try:
+                entrada_float = entrada.replace(",", ".")
+                entrada_float = float(entrada_float)
+                print(entrada_float)
+            except:
+                print("Não tem entrada para esse mapa")
+                entrada_float = "Não tem entrada para esse mapa"
+                
+            if ("winnerTeam" in match):
+                maps_rouds = match["maps"][point]["result"]["team1TotalRounds"] + match["maps"][point]["result"]["team2TotalRounds"]
+            
+            if entrada_float != "Não tem entrada para esse mapa":
+                if maps_rouds < entrada_float:
+                    print("Ganhou")
+                    with open('Messages/entrada_message.txt', 'r', encoding='utf-8') as file:
+                                entrada = file.read().format(
+                                    time_a=match['team1']['name'],
+                                    time_b=match['team2']['name'],
+                                    match_date=date_timestemp.strftime('%d/%m/%Y'),
+                                    match_time=date_timestemp.strftime('%H:%M'),
+                                    favorite_team=favorite_team,
+                                    map_1=informacoes['firt_map_element'],
+                                    map_2=informacoes['second_map_element'],
+                                    map_3=informacoes['third_map_element'],
+                                    entrada_1=f'UNDER {first_map_tip}',
+                                    entrada_2=f'UNDER {second_map_tip}',
+                                    entrada_3=f'UNDER {third_map_tip}'
+                                )
+                else:
+                    print("Perdeu")
+                point += 1
     
     time.sleep(10)

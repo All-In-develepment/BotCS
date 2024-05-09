@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import requests
 
 def CreateConnection():
     try:
@@ -108,4 +109,12 @@ def InsertOrUpdateGame(game_data):
             return False
     else:
         print("Erro ao Conectar com banco de dados")
+        return False
+    
+
+def GetOpenTips():
+    try:
+        match = requests.get(f'http://localhost:8080/api/Tips/status').json()
+        return match
+    except:
         return False
