@@ -38,5 +38,12 @@ namespace API.Controllers
         {
             return HandlePagedResult(await Mediator.Send(new ListTipWithStatusTrue.Query { Params = param }));
         }
+
+        [HttpPut("{matchid}")]
+        public async Task<IActionResult> EditTip(string matchid, Tip tip)
+        {
+            tip.TipMatchId = matchid;
+            return HandleResult(await Mediator.Send(new EditTip.Command { Tip = tip }));
+        }
     }
 }
