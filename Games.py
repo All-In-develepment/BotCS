@@ -43,6 +43,13 @@ def getMatchInfo(urls):
     
     return next_matchs_info
 
+def getMatchByMatchId(match_id):
+    try:
+        match = requests.get(f'http://191.252.5.225:5000/get-matches-statistics/{match_id}').json()
+        return match
+    except:
+        return False
+
 def strutuctInfo(info):
     new_dict_string = {}
     
