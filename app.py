@@ -3,9 +3,9 @@ import os
 from datetime import datetime
 from Games import getAllGames, filterNextGames, getMapsBO1, getMapsBO3, getMapsBO5, getMatchInfo, strutuctInfo
 from Messages.messagens import SendMessage
-from Tips.TipsManager import CreateTips, VerifyOpenTip
+from Tips.TipsManager import VerifyOpenTip
 from verifyerTeam import AvgWinPeerLoos, FavoriteTeam
-from DataBases.Connection import ListMultipleMatchs, ListSingleMatch, InsertOne, DeleteOne, EditOne, CreateConnection, FindMatchByMatchId, InsertOrUpdateGame
+from DataBases.Connection import InsertOrUpdateGame
 
 
 

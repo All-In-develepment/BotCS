@@ -32,5 +32,11 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new FindByMatchId.Query { MatchId = matchId }));
         }
+
+        [HttpGet("status")]
+        public async Task<IActionResult> GetTipsWithStatusTrue([FromQuery] PagingParams param)
+        {
+            return HandlePagedResult(await Mediator.Send(new ListTipWithStatusTrue.Query { Params = param }));
+        }
     }
 }

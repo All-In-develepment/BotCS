@@ -6,14 +6,14 @@ using Persistence;
 
 namespace Application.Tips
 {
-    public class ListTips
+    public class ListTipWithStatusTrue
     {
         public class Query : IRequest<Result<PagedList<TipDto>>>
         {
             public PagingParams Params { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Result<PagedList<TipDto>>>
+        public class Handler :  IRequestHandler<Query, Result<PagedList<TipDto>>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -26,6 +26,7 @@ namespace Application.Tips
             public async Task<Result<PagedList<TipDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var query = _context.Tips
+                    .Where(t => t.TipStatus == true)
                     .OrderBy(d => d.TipDate)
                     .ProjectTo<TipDto>(_mapper.ConfigurationProvider)
                     .AsQueryable();
