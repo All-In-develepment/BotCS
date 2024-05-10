@@ -7,3 +7,4 @@ Time Favorito: {favorite_team}
 -{map_1}: {entrada_1}
 -{map_2}: {entrada_2}
 -{map_3}: {entrada_3}
+

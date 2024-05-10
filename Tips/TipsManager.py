@@ -29,15 +29,14 @@ def CreateTips(match_id, match_status, match_date, team_a, team_b, map_1, map_2,
 def VerifyOpenTip(match_id):
     # Busca no banco de dados a dica para o jogo
     print(f"Verificando dica para o jogo {match_id}")
-    tip, tip_success = FindMatchByMatchId(int(match_id))
-    if tip_success:
-        # Verifica se a dica está aberta
-        try:
-            if tip[0]['status'] == True:
-                print(f"Dica aberta para o jogo {match_id}")
-                return True
-            else:
-                print(f"Dica fechada para o jogo {match_id}")
-                return False
-        except:
-            return False
+    
+    tip = FindMatchByMatchId(int(match_id))
+    
+    if (tip["tipStatus"] == False):
+        print(f"Dica fechada para o jogo {match_id}")
+        return False
+    else:
+        print(f"Dica aberta para o jogo {match_id}")
+        return True
+    
+    

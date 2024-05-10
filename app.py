@@ -1,16 +1,14 @@
 import time
 import os
 from datetime import datetime
-from Games import getAllGames, filterNextGames, getMapsBO1, getMapsBO3, getMapsBO5, getMatchInfo, strutuctInfo
+from Games import getAllGames, filterNextGames, getMapsBO1, getMapsBO3, getMapsBO5, getMatchByMatchId, getMatchInfo, strutuctInfo
 from Messages.messagens import SendMessage
-from Tips.TipsManager import CreateTips, VerifyOpenTip
+from Results.checkResult import CheckResult
+from Tips.TipsManager import VerifyOpenTip
 from verifyerTeam import AvgWinPeerLoos, FavoriteTeam
-from DataBases.Connection import ListMultipleMatchs, ListSingleMatch, InsertOne, DeleteOne, EditOne, CreateConnection, FindMatchByMatchId, InsertOrUpdateGame
+from DataBases.Connection import GetOpenTips, InsertOne
 
 
-
-# Definindo um conjunto para armazenar IDs de partidas enviadas
-partidas_enviadas = set()
 
 url_matchs = "http://191.252.5.225:5000/get-matches-statistics"
 
@@ -43,7 +41,7 @@ while True:
                     tip_is_open = VerifyOpenTip(match['id'])
                     
                     # Se a tip não estiver aberta e se o ID da partida ainda não foi enviado
-                    if not tip_is_open and match['id'] not in partidas_enviadas:
+                    if (tip_is_open == False):
                         # Busca as informações de acordo com o tipo de jogo
                         if match["format"]["type"] == "bo3":
                             informacoes = getMapsBO3(new_structure['match_id'], new_structure['new_uri'])
@@ -57,6 +55,7 @@ while True:
 
                         # Formatação de data de forma legível
                         date_timestemp = datetime.fromtimestamp(match['date']/1000)
+                        
 
                         # Verifica se o time favorito é o time 1 ou 2
                         if favorite_team == 'T1':
@@ -81,6 +80,7 @@ while True:
                             first_map_tip = AvgWinPeerLoos(first_map_avg)
                             second_map_tip = AvgWinPeerLoos(second_map_avg)
                             third_map_tip = AvgWinPeerLoos(third_map_avg)
+                            
 
                             # Abre o arquivo de mensagem e formata a mensagem
                             with open('Messages/entrada_message.txt', 'r', encoding='utf-8') as file:
@@ -90,38 +90,34 @@ while True:
                                     match_date=date_timestemp.strftime('%d/%m/%Y'),
                                     match_time=date_timestemp.strftime('%H:%M'),
                                     favorite_team=favorite_team,
-                                    map_1=informacoes['firt_map_element'],
-                                    map_2=informacoes['second_map_element'],
-                                    map_3=informacoes['third_map_element'],
+                                    map_1=f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
+                                    map_2=f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
+                                    map_3=f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
                                     entrada_1=f'UNDER {first_map_tip}',
                                     entrada_2=f'UNDER {second_map_tip}',
                                     entrada_3=f'UNDER {third_map_tip}'
                                 )
 
                             # Envia a mensagem
-                            SendMessage(entrada)
-
-                            # Insere a dica no banco de dados
-                            InsertOrUpdateGame({
-                                'match_id': match['id'],
-                                'status': True,
-                                'date': date_timestemp.strftime('%d/%m/%Y %H:%M'),
-                                'team_a': match['team1']['name'],
-                                'team_b': match['team2']['name'],
-                                'map_1': informacoes['firt_map_element'],
-                                'map_2': informacoes['second_map_element'],
-                                'map_3': informacoes['third_map_element'],
-                                'map_4': 'N/A',
-                                'map_5': 'N/A',
-                                'entrada_1': f'UNDER {first_map_tip}',
-                                'entrada_2': f'UNDER {second_map_tip}',
-                                'entrada_3': f'UNDER {third_map_tip}',
-                                'entrada_4': 'N/A',
-                                'entrada_5': 'N/A'
+                            msg_id = SendMessage(entrada)
+                            
+                            InsertOne({
+                                "TeamA": f"{match['team1']['name']}",
+                                "TeamB" : f"{match['team2']['name']}",
+                                "TipMaps": [
+                                    f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['fourth_map_element'] if 'fourth_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['fifth_map_element'] if 'fifth_map_element' in informacoes else 'na'}",
+                                ],
+                                "TipMapOdd": [f"{first_map_tip}", f"{second_map_tip}", f"{third_map_tip}"],
+                                "TipMatchId": f"{match['id']}",
+                                "FavoriteTeam": f"{favorite_team}",
+                                "TipMessageId": f"{msg_id}",
+                                "TipDate": f"{date_timestemp.strftime('%Y-%m-%dT%H:%M:%S')}",
+                                "tipStatus": True
                             })
-
-                            # Adiciona o ID da partida ao conjunto de partidas enviadas
-                            partidas_enviadas.add(match['id'])
 
                         elif favorite_team == 'T2':
                             favorite_team = match['team2']['name']
@@ -148,39 +144,80 @@ while True:
                                     match_date=date_timestemp.strftime('%d/%m/%Y'),
                                     match_time=date_timestemp.strftime('%H:%M'),
                                     favorite_team=favorite_team,
-                                    map_1=informacoes['firt_map_element'],
-                                    map_2=informacoes['second_map_element'],
-                                    map_3=informacoes['third_map_element'],
+                                    map_1=f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
+                                    map_2=f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
+                                    map_3=f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
                                     entrada_1=f'UNDER {first_map_tip}',
                                     entrada_2=f'UNDER {second_map_tip}',
                                     entrada_3=f'UNDER {third_map_tip}'
                                 )
-                            SendMessage(entrada)
-                            InsertOrUpdateGame({
-                                'match_id': match['id'],
-                                'status': True,
-                                'date': date_timestemp.strftime('%d/%m/%Y %H:%M'),
-                                'team_a': match['team1']['name'],
-                                'team_b': match['team2']['name'],
-                                'map_1': informacoes['firt_map_element'],
-                                'map_2': informacoes['second_map_element'],
-                                'map_3': informacoes['third_map_element'],
-                                'map_4': 'N/A',
-                                'map_5': 'N/A',
-                                'entrada_1': f'UNDER {first_map_tip}',
-                                'entrada_2': f'UNDER {second_map_tip}',
-                                'entrada_3': f'UNDER {third_map_tip}',
-                                'entrada_4': 'N/A',
-                                'entrada_5': 'N/A'
+                            msg_id = SendMessage(entrada)
+                            
+                            InsertOne({
+                                "TeamA": f"{match['team1']['name']}",
+                                "TeamB" : f"{match['team2']['name']}",
+                                "TipMaps": [
+                                    f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['fourth_map_element'] if 'fourth_map_element' in informacoes else 'na'}",
+                                    f"{informacoes['fifth_map_element'] if 'fifth_map_element' in informacoes else 'na'}",
+                                ],
+                                "TipMapOdd": [f"{first_map_tip}", f"{second_map_tip}", f"{third_map_tip}"],
+                                "TipMatchId": f"{match['id']}",
+                                "FavoriteTeam": f"{favorite_team}",
+                                "TipMessageId": f"{msg_id}",
+                                "TipDate": f"{date_timestemp.strftime('%Y-%m-%dT%H:%M:%S')}",
+                                "tipStatus": True
                             })
-
-                            # Adiciona o ID da partida ao conjunto de partidas enviadas
-                            partidas_enviadas.add(match['id'])
                         else:
                             print("Não atende aos requisitos")
 
                 else:
                     print("Partida sem mapa\n--------------------------")
+    except Exception as e:
+        print(e)
+        
+    try:
+        match_in_db = GetOpenTips()
+        
+        # point = 0
+        for tip in match_in_db:
+            CheckResult(tip)
+            # match = getMatchByMatchId(tip["tipMatchId"])
+            # print(tip["tipMatchId"])
+            # for entrada in tip["tipMapOdd"]:
+            #     try:
+            #         entrada_float = entrada.replace(",", ".")
+            #         entrada_float = float(entrada_float)
+            #         print(entrada_float)
+            #     except:
+            #         print("Não tem entrada para esse mapa")
+            #         entrada_float = "Não tem entrada para esse mapa"
+                    
+            #     if ("winnerTeam" in match):
+            #         maps_rouds = match["maps"][point]["result"]["team1TotalRounds"] + match["maps"][point]["result"]["team2TotalRounds"]
+                
+            #     if entrada_float != "Não tem entrada para esse mapa":
+            #         if maps_rouds < entrada_float:
+            #             print("Ganhou")
+            #             # with open('Messages/entrada_message.txt', 'r', encoding='utf-8') as file:
+            #             #             entrada = file.read().format(
+            #             #                 time_a=match['team1']['name'],
+            #             #                 time_b=match['team2']['name'],
+            #             #                 match_date=date_timestemp.strftime('%d/%m/%Y'),
+            #             #                 match_time=date_timestemp.strftime('%H:%M'),
+            #             #                 favorite_team=favorite_team,
+            #             #                 map_1=informacoes['firt_map_element'],
+            #             #                 map_2=informacoes['second_map_element'],
+            #             #                 map_3=informacoes['third_map_element'],
+            #             #                 entrada_1=f'UNDER {first_map_tip}',
+            #             #                 entrada_2=f'UNDER {second_map_tip}',
+            #             #                 entrada_3=f'UNDER {third_map_tip}'
+            #             #             )
+            #         else:
+            #             print("Perdeu")
+                    # point += 1
     except Exception as e:
         print(e)
     
