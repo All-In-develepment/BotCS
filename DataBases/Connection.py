@@ -53,9 +53,9 @@ def GetOpenTips():
     except:
         return False
     
-def UpdateTip(match_id):
+def UpdateTip(match_id, data):
     try:
-        match = requests.put(f'http://191.252.5.229:8080/api/Tips/{match_id}').json()
+        match = requests.put(f'http://191.252.5.229:8080/api/Tips/{match_id}', json=data).json()
         return match
     except:
         return False
