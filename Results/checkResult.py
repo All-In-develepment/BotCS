@@ -4,6 +4,7 @@ from Messages.messagens import SendMessage
 
 def CheckResult(tip):
     point = 0
+    bets_result = []
     match = getMatchByMatchId(tip["tipMatchId"])
     print(match)
     for entrada in tip["tipMapOdd"]:
@@ -21,7 +22,9 @@ def CheckResult(tip):
         if entrada_float != "Não tem entrada para esse mapa":
             if maps_rouds < entrada_float:
                 print("Ganhou")
+                bets_result[point] = "✅"
                 SendMessage("Ganhou")
             else:
+                bets_result[point] = "❌"
                 print("Perdeu")
             point += 1

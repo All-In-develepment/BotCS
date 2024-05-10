@@ -1,0 +1,10 @@
+Próxima entrada:
+{time_a} vs {time_b}
+📆 Data: {match_date}
+⌚ Horario: {match_time}
+Time Favorito: {favorite_team}
+🗺️ Mapas: 
+-{map_1}: {entrada_1} {resultado_1}
+-{map_2}: {entrada_2} {resultado_2}
+-{map_3}: {entrada_3} {resultado_3}
+

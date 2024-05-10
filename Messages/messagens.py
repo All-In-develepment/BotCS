@@ -27,7 +27,7 @@ def EditMessage(message_id, message):
     bot = telebot.TeleBot(bot_token)
 
     # Envie a mensagem para o canal
-    msg_id = bot.send_message(channel_id, message)
+    msg_id = bot.edit_message_text('message', channel_id, 19)
 
     # Imprima uma mensagem de sucesso
     print('Mensagem enviada com sucesso')

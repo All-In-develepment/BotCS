@@ -4,6 +4,7 @@ namespace Application.Tips
     {
         public int TipId { get; set; }
         public string TipMatchId { get; set; }
+        public DateTime TipDate { get; set; }
         public string TeamA { get; set; }
         public string TeamB { get; set; }
         public string FavoriteTeam { get; set; }
