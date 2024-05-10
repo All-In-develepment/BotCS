@@ -12,6 +12,7 @@ namespace Application.Tips
         public class Command : IRequest<Result<Unit>>
         {
             public string MatchId { get; set; }
+            public List<string> TipsMapResult { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -30,15 +31,7 @@ namespace Application.Tips
 
                     if (tip == null) return null;
 
-                    // tip.TipMatchId = request.Tip.TipMatchId;
-                    // tip.TeamA = request.Tip.TeamA;
-                    // tip.TeamB = request.Tip.TeamB;
-                    // tip.FavoriteTeam = request.Tip.FavoriteTeam;
-                    // tip.TipMaps = request.Tip.TipMaps;
-                    // tip.TipMapOdd = request.Tip.TipMapOdd;
-                    // tip.TipMessageId = request.Tip.TipMessageId;
-                    // tip.TipsMapResult = request.Tip.TipsMapResult;
-                    // tip.TipDate = request.Tip.TipDate;
+                    tip.TipsMapResult = request.TipsMapResult;
                     tip.TipStatus = false;
 
                     var result = await _context.SaveChangesAsync() > 0;

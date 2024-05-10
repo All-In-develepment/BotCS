@@ -40,9 +40,9 @@ namespace API.Controllers
         }
 
         [HttpPut("{matchid}")]
-        public async Task<IActionResult> EditTip(string matchid)
+        public async Task<IActionResult> EditTip(string matchid, [FromBody] List<string> tipResult)
         {
-            return HandleResult(await Mediator.Send(new CloseTip.Command { MatchId = matchid }));
+            return HandleResult(await Mediator.Send(new CloseTip.Command { MatchId = matchid, TipsMapResult = tipResult}));
         }
     }
 }
