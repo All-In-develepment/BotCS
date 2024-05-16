@@ -99,25 +99,26 @@ while True:
                                 )
 
                             # Envia a mensagem
-                            msg_id = SendMessage(entrada)
+                            if (first_map_tip != 'Não entrar' and second_map_tip != 'Não entrar' and third_map_tip != 'Não entrar'):
+                                msg_id = SendMessage(entrada)
                             
-                            InsertOne({
-                                "TeamA": f"{match['team1']['name']}",
-                                "TeamB" : f"{match['team2']['name']}",
-                                "TipMaps": [
-                                    f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
-                                    f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
-                                    f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
-                                    f"{informacoes['fourth_map_element'] if 'fourth_map_element' in informacoes else 'na'}",
-                                    f"{informacoes['fifth_map_element'] if 'fifth_map_element' in informacoes else 'na'}",
-                                ],
-                                "TipMapOdd": [f"{first_map_tip}", f"{second_map_tip}", f"{third_map_tip}"],
-                                "TipMatchId": f"{match['id']}",
-                                "FavoriteTeam": f"{favorite_team}",
-                                "TipMessageId": f"{msg_id}",
-                                "TipDate": f"{date_timestemp.strftime('%Y-%m-%dT%H:%M:%S')}",
-                                "tipStatus": True
-                            })
+                                InsertOne({
+                                    "TeamA": f"{match['team1']['name']}",
+                                    "TeamB" : f"{match['team2']['name']}",
+                                    "TipMaps": [
+                                        f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
+                                        f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
+                                        f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
+                                        f"{informacoes['fourth_map_element'] if 'fourth_map_element' in informacoes else 'na'}",
+                                        f"{informacoes['fifth_map_element'] if 'fifth_map_element' in informacoes else 'na'}",
+                                    ],
+                                    "TipMapOdd": [f"{first_map_tip}", f"{second_map_tip}", f"{third_map_tip}"],
+                                    "TipMatchId": f"{match['id']}",
+                                    "FavoriteTeam": f"{favorite_team}",
+                                    "TipMessageId": f"{msg_id}",
+                                    "TipDate": f"{date_timestemp.strftime('%Y-%m-%dT%H:%M:%S')}",
+                                    "tipStatus": True
+                                })
 
                         elif favorite_team == 'T2':
                             favorite_team = match['team2']['name']
@@ -151,25 +152,27 @@ while True:
                                     entrada_2=f'UNDER {second_map_tip}',
                                     entrada_3=f'UNDER {third_map_tip}'
                                 )
-                            msg_id = SendMessage(entrada)
-                            
-                            InsertOne({
-                                "TeamA": f"{match['team1']['name']}",
-                                "TeamB" : f"{match['team2']['name']}",
-                                "TipMaps": [
-                                    f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
-                                    f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
-                                    f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
-                                    f"{informacoes['fourth_map_element'] if 'fourth_map_element' in informacoes else 'na'}",
-                                    f"{informacoes['fifth_map_element'] if 'fifth_map_element' in informacoes else 'na'}",
-                                ],
-                                "TipMapOdd": [f"{first_map_tip}", f"{second_map_tip}", f"{third_map_tip}"],
-                                "TipMatchId": f"{match['id']}",
-                                "FavoriteTeam": f"{favorite_team}",
-                                "TipMessageId": f"{msg_id}",
-                                "TipDate": f"{date_timestemp.strftime('%Y-%m-%dT%H:%M:%S')}",
-                                "tipStatus": True
-                            })
+                                
+                            if (first_map_tip != 'Não entrar' and second_map_tip != 'Não entrar' and third_map_tip != 'Não entrar'):
+                                msg_id = SendMessage(entrada)
+                                
+                                InsertOne({
+                                    "TeamA": f"{match['team1']['name']}",
+                                    "TeamB" : f"{match['team2']['name']}",
+                                    "TipMaps": [
+                                        f"{informacoes['firt_map_element'] if 'firt_map_element' in informacoes else 'na'}",
+                                        f"{informacoes['second_map_element'] if 'second_map_element' in informacoes else 'na'}",
+                                        f"{informacoes['third_map_element'] if 'third_map_element' in informacoes else 'na'}",
+                                        f"{informacoes['fourth_map_element'] if 'fourth_map_element' in informacoes else 'na'}",
+                                        f"{informacoes['fifth_map_element'] if 'fifth_map_element' in informacoes else 'na'}",
+                                    ],
+                                    "TipMapOdd": [f"{first_map_tip}", f"{second_map_tip}", f"{third_map_tip}"],
+                                    "TipMatchId": f"{match['id']}",
+                                    "FavoriteTeam": f"{favorite_team}",
+                                    "TipMessageId": f"{msg_id}",
+                                    "TipDate": f"{date_timestemp.strftime('%Y-%m-%dT%H:%M:%S')}",
+                                    "tipStatus": True
+                                })
                         else:
                             print("Não atende aos requisitos")
 
