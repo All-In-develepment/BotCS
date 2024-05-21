@@ -127,19 +127,19 @@ def strutuctInfo(info):
     return new_dict_string
 
 def getMapsBO3(match_id, url):
-    url_local = f"http://127.0.0.1:8000/machAnalytic/{match_id}/{url}"
+    url_local = f"http://89.117.53.183:8000/machAnalytic/{match_id}/{url}"
     response = requests.get(url_local)
     
     return response.json()
 
 def getMapsBO1(match_id, url):
-    url_local = f"http://127.0.0.1:8000/machAnalyticBo1/{match_id}/{url}"
+    url_local = f"http://89.117.53.183:8000/machAnalyticBo1/{match_id}/{url}"
     response = requests.get(url_local)
     
     return response.json()
 
 def getMapsBO5(match_id, url):
-    url_local = f"http://127.0.0.1:8000/machAnalyticBo5/{match_id}/{url}"
+    url_local = f"http://89.117.53.183:8000/machAnalyticBo5/{match_id}/{url}"
     response = requests.get(url_local)
     
     return response.json()
