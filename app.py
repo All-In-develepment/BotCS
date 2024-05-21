@@ -99,7 +99,7 @@ while True:
                                 )
 
                             # Envia a mensagem
-                            if (first_map_tip != 'Não entrar' and second_map_tip != 'Não entrar' and third_map_tip != 'Não entrar'):
+                            if (first_map_tip != 'Não entrar' or second_map_tip != 'Não entrar' or third_map_tip != 'Não entrar'):
                                 msg_id = SendMessage(entrada)
                             
                                 InsertOne({
@@ -153,7 +153,7 @@ while True:
                                     entrada_3=f'UNDER {third_map_tip}'
                                 )
                                 
-                            if (first_map_tip != 'Não entrar' and second_map_tip != 'Não entrar' and third_map_tip != 'Não entrar'):
+                            if (first_map_tip != 'Não entrar' or second_map_tip != 'Não entrar' or third_map_tip != 'Não entrar'):
                                 msg_id = SendMessage(entrada)
                                 
                                 InsertOne({
