@@ -20,16 +20,16 @@ def FavoriteTeam(team_a_name, team_b_name, team_a_rank, team_b_rank, range):
 def AvgWinPeerLoos(avg_map):
     print (avg_map)
     if ((avg_map >= 7) and (avg_map < 8)):
-        return "22,5"
+        return "23,5"
     elif((avg_map >= 6) and (avg_map < 7)):
-        return "21,5"
+        return "22,5"
     elif((avg_map >= 5) and (avg_map < 6)):
-        return "20,5"
+        return "21,5"
     elif((avg_map >= 4) and (avg_map < 5)):
-        return "19,5"
+        return "20,5"
     elif((avg_map >= 3) and (avg_map < 4)):
-        return "18,5"
+        return "19,5"
     elif((avg_map >= 2) and (avg_map < 3)):
-        return "17,5"
+        return "18,5"
     else:
         return 'Não entrar'
