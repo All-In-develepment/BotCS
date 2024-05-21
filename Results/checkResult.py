@@ -55,7 +55,6 @@ def CheckResult(tip):
                     resultado_2=bets_result[1],
                     resultado_3=bets_result[2]
                 )
-            
             print(all_results)
             try:
                 EditMessage(tip["tipMessageId"], all_results)
