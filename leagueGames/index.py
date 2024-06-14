@@ -3,7 +3,7 @@ import time
 from update_script import update_database
 
 # Agendar a tarefa para executar uma vez por dia às 2h da manhã
-schedule.every().day.at("02:00").do(update_database)
+schedule.every().day.at("11:20").do(update_database)
 
 # Função para manter o agendamento em execução
 def run_schedule():
