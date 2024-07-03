@@ -3,3 +3,4 @@ pymongo===4.7.1
 pandas==2.2.2
 requests==2.31.0
 schedule
+flask
