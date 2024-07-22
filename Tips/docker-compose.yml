@@ -1,0 +1,34 @@
+version: "3"
+
+name: tips
+
+services:
+  tips-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    networks:
+      - networkTips
+  front:
+    build:
+      context: ./front/.
+      dockerfile: Dockerfile
+    restart: always
+    # command: sleep infinity
+    depends_on:
+      - tips-api
+    volumes:
+      - .:/app
+    ports:
+      - 8501:8501
+    networks:
+      - networkTips
+
+networks:
+  networkTips:
+    name: networkTips
